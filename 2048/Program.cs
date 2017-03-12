@@ -60,10 +60,7 @@ namespace _2048
 
             }
             while (key.Key != ConsoleKey.Spacebar);
-
-
-
-
+            
             Console.ReadKey();
 
 
@@ -86,8 +83,10 @@ namespace _2048
             {
                 return 0;
             }
-            int produceIndex = new Random().Next(zero.Count - 1);//随机生成一个2
-            arrMain[int.Parse(zero[produceIndex].Split(new string[] { " " }, StringSplitOptions.None)[0]), int.Parse(zero[produceIndex].Split(new string[] { " " }, StringSplitOptions.None)[1])] = 2;
+            int produceIndex = new Random().Next(zero.Count);//随机生成一个2
+            lastZero = zero.Count;
+            int produceNumber = (new Random().Next(5) == 4 ? 4 : 2);
+            arrMain[int.Parse(zero[produceIndex].Split(new string[] { " " }, StringSplitOptions.None)[0]), int.Parse(zero[produceIndex].Split(new string[] { " " }, StringSplitOptions.None)[1])] = produceNumber;
             return 1;
         }
         //顺时针转置
@@ -121,20 +120,78 @@ namespace _2048
 
         }
         //循环输出
+       static int step = 0;
+        static int lastZero=0;
         private static void Output()
         {
-
+            int score = 0;
+            step++;
             for (int i = 0; i <= 3; i++)
             {
+              
                 Console.WriteLine();
                 Console.WriteLine();
                 for (int j = 0; j <= 3; j++)
                 {
+                    ConsoleColor cc = new ConsoleColor();
+                    switch(arrMain[i,j])
+                    {
+                        case 0:
+                            cc = ConsoleColor.DarkGray;
+                            break;
+                        case 2:
+                            cc = ConsoleColor.White;
+                            break;
+                        case 4:
+                            cc = ConsoleColor.Gray;
+                            break;
+                        case 8:
+                            cc = ConsoleColor.DarkYellow;
+                            break;
+                        case 16:
+                            cc = ConsoleColor.Green;
+                            break;
+                        case 32:
+                            cc = ConsoleColor.DarkGreen;
+                            break;
+                        case 64:
+                            cc = ConsoleColor.Red;
+                            break;
+                        case 128:
+                            cc = ConsoleColor.DarkRed;
+                            break;
+                        case 256:
+                            cc = ConsoleColor.Cyan;
+                            break;
+                        case 512:
+                            cc = ConsoleColor.DarkCyan;
+                            break;
+                        case 1024:
+                            cc = ConsoleColor.Yellow;
+                            break;
+                        case 2048:
+                            cc = ConsoleColor.DarkYellow;
+                            break;
+                        default:
+                            cc = ConsoleColor.Magenta;
+                            break;
+                    }
+                    score += arrMain[i, j];
+                    Console.ForegroundColor = cc;
                     Console.Write("{0,5}", arrMain[i, j]);
                 }
 
             }
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Score:" + score.ToString());
+            Console.WriteLine("Step:"+step.ToString());
+            if(lastZero<=4)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            Console.WriteLine("LastZero:" + lastZero.ToString());
+
         }
         //进行一次操作
         private static void Operate()
